@@ -1,6 +1,7 @@
 package ma.forix.adminpanel;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
@@ -11,6 +12,8 @@ public class AdminControllerFX {
     private TextField textInputField;
     @FXML
     private TextArea consoleArea;
+    @FXML
+    private TextArea lsArea;
 
     private AdminPanel adminPanel;
     private boolean isLog = false;
@@ -45,9 +48,12 @@ public class AdminControllerFX {
             consoleArea.appendText(" "+text+"\n");
     }
 
+    public void infoText(String text){
+        lsArea.appendText(text+"\n");
+    }
+
     @FXML
     private void initialize() {
-        // Initialize the person table with the two columns.
         System.out.println("tadaaa");
     }
 }

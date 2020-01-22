@@ -76,7 +76,8 @@ public class FtpMaker {
 
                 for (FTPFile temp : test123) {
                     System.out.println("file: " + temp.getName());
-                    adminControllerFX.addText(temp.getName().toString(), false);
+                    adminControllerFX.infoText(temp.getName().toString());
+                    //adminControllerFX.addText(temp.getName().toString(), false);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
