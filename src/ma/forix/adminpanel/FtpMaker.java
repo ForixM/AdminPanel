@@ -74,6 +74,7 @@ public class FtpMaker {
                 FTPFile[] test123 = client.listFiles();
                 adminControllerFX.addText("Contenu du dossier: "+client.printWorkingDirectory(), false);
 
+                adminControllerFX.clearInfoArea();
                 for (FTPFile temp : test123) {
                     System.out.println("file: " + temp.getName());
                     adminControllerFX.infoText(temp.getName().toString());
@@ -87,13 +88,47 @@ public class FtpMaker {
         if (command.equals("cd")){
             adminControllerFX.addText("Dossier distant: ",false);
         } else if (commande[0].equals("cd") && commande[1].length() > 1){
-            System.out.println("changement de dossier vers: "+commande[1]);
             try {
                 client.changeWorkingDirectory(commande[1]);
-                System.out.println("OK. Le dossier actuel est maintenant: "+client.printWorkingDirectory());
                 adminControllerFX.addText("OK. Le dossier actuel est maintenant: "+client.printWorkingDirectory(), false);
             } catch (IOException e) {
                 adminControllerFX.addText("Le dossier spécifié n'existe pas", false);
+                e.printStackTrace();
+            }
+        }
+
+        if (commande[0].equals("mkdir") && commande[1].length() > 1){
+            try {
+                if (client.makeDirectory(commande[1])){
+                    adminControllerFX.addText("Dossier créé avec succès", false);
+                } else {
+                    adminControllerFX.addText("Échec lors de la création du dossier", false);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (commande[0].equals("mdelete") && commande[1].length() > 1){
+            try {
+                if (client.deleteFile(commande[1])){
+                    adminControllerFX.addText("Fichier supprimé", false);
+                } else {
+                    adminControllerFX.addText("[ERREUR] La sélection doit obligatoirement être un fichier !", false);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (commande[0].equals("rmdir") && commande[1].length() > 1){
+            try {
+                if (client.removeDirectory(commande[1])){
+                    adminControllerFX.addText("Dossier supprimmé", false);
+                } else {
+                    adminControllerFX.addText("[ERREUR] La sélection doit obligatoirement être un dossier !", false);
+                }
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }

@@ -42,10 +42,17 @@ public class AdminControllerFX {
     }
 
     public void addText(String text, boolean userEnter){
-        if (userEnter)
-            consoleArea.appendText("ftp> "+text+"\n");
-        else
-            consoleArea.appendText(" "+text+"\n");
+        if (userEnter) {
+            consoleArea.appendText("ftp> " + text + "\n");
+            System.out.println("ftp> " + text);
+        }else {
+            consoleArea.appendText(" " + text + "\n");
+            System.out.println(" " + text);
+        }
+    }
+
+    public void clearInfoArea(){
+        lsArea.clear();
     }
 
     public void infoText(String text){
