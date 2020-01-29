@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 public class AdminPanel extends Application {
@@ -38,5 +39,9 @@ public class AdminPanel extends Application {
 
         window.setScene(scene);
         window.show();
+    }
+
+    public static Stage getWindow(){
+        return window;
     }
 }

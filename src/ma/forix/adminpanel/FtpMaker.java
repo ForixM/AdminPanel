@@ -54,7 +54,9 @@ public class FtpMaker {
                 return;// false;
             } else {
                 adminControllerFX.activateTextInput(true);
+                adminControllerFX.activateDisconnectButton(true);
                 System.out.println("connecté");
+                ls();
                 return;// true;
             }
 
@@ -64,25 +66,27 @@ public class FtpMaker {
         }
     }
 
+    private static void ls(){
+        try {
+            FTPFile[] contentList = client.listFiles();
+            adminControllerFX.addText("Contenu du dossier: "+client.printWorkingDirectory(), false);
+            adminControllerFX.clearInfoArea();
+
+            for (FTPFile selected : contentList) {
+                System.out.println("file: " + selected.getName());
+                adminControllerFX.infoText(selected.getName().toString());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void exec(String command){
         System.out.println();
         System.out.println();
         String[] commande = command.split(" ");
         if (command.equals("ls")){
-            System.out.println("user executed 'ls' command");
-            try {
-                FTPFile[] test123 = client.listFiles();
-                adminControllerFX.addText("Contenu du dossier: "+client.printWorkingDirectory(), false);
-
-                adminControllerFX.clearInfoArea();
-                for (FTPFile temp : test123) {
-                    System.out.println("file: " + temp.getName());
-                    adminControllerFX.infoText(temp.getName().toString());
-                    //adminControllerFX.addText(temp.getName().toString(), false);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            ls();
         }
 
         if (command.equals("cd")){
@@ -91,6 +95,7 @@ public class FtpMaker {
             try {
                 client.changeWorkingDirectory(commande[1]);
                 adminControllerFX.addText("OK. Le dossier actuel est maintenant: "+client.printWorkingDirectory(), false);
+                ls();
             } catch (IOException e) {
                 adminControllerFX.addText("Le dossier spécifié n'existe pas", false);
                 e.printStackTrace();
@@ -101,6 +106,7 @@ public class FtpMaker {
             try {
                 if (client.makeDirectory(commande[1])){
                     adminControllerFX.addText("Dossier créé avec succès", false);
+                    ls();
                 } else {
                     adminControllerFX.addText("Échec lors de la création du dossier", false);
                 }
@@ -112,6 +118,7 @@ public class FtpMaker {
         if (commande[0].equals("mdelete") && commande[1].length() > 1){
             try {
                 if (client.deleteFile(commande[1])){
+                    ls();
                     adminControllerFX.addText("Fichier supprimé", false);
                 } else {
                     adminControllerFX.addText("[ERREUR] La sélection doit obligatoirement être un fichier !", false);
@@ -124,6 +131,7 @@ public class FtpMaker {
         if (commande[0].equals("rmdir") && commande[1].length() > 1){
             try {
                 if (client.removeDirectory(commande[1])){
+                    ls();
                     adminControllerFX.addText("Dossier supprimmé", false);
                 } else {
                     adminControllerFX.addText("[ERREUR] La sélection doit obligatoirement être un dossier !", false);
@@ -131,6 +139,16 @@ public class FtpMaker {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    public static void disconnect(){
+        try {
+            client.disconnect();
+            adminControllerFX.addText("Déconnecté du serveur FTP", false);
+        } catch (IOException e) {
+            adminControllerFX.addText("Tentative de déconnection échoué", false);
+            e.printStackTrace();
         }
     }
 }
