@@ -4,7 +4,7 @@ import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
 
-import java.io.IOException;
+import java.io.*;
 
 public class FtpMaker {
 
@@ -17,6 +17,36 @@ public class FtpMaker {
         FtpMaker.host = host;
         FtpMaker.username = username;
         FtpMaker.password = password;
+    }
+
+    public static void upload(File folder){
+        if (folder.isFile()){
+            try (InputStream input = new FileInputStream(folder)){
+                client.storeFile(client.printWorkingDirectory()+folder.getName(), input);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static void uploadFile(File file){
+        try (InputStream input = new FileInputStream(file)){
+            System.out.println("Envoi du fichier en cours...");
+            client.storeFile(client.printWorkingDirectory()+file.getName(), input);
+            System.out.println("Envoi terminé");
+            reponseServeur();
+            ls();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void mkdir(String name){
+        //client.makeDirectory();
     }
 
     public static void setAdminControllerFX(AdminControllerFX adminC){
@@ -67,10 +97,13 @@ public class FtpMaker {
     }
 
     private static void ls(){
+        System.out.println("je suis dans ls");
         try {
             FTPFile[] contentList = client.listFiles();
+            System.out.println("contenu contentlist: "+contentList);
+            System.out.println("sa longueur: "+contentList.length);
             adminControllerFX.addText("Contenu du dossier: "+client.printWorkingDirectory(), false);
-            adminControllerFX.clearInfoArea();
+            //adminControllerFX.clearInfoArea();
 
             for (FTPFile selected : contentList) {
                 System.out.println("file: " + selected.getName());

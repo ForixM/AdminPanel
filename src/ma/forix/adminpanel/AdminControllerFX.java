@@ -22,8 +22,15 @@ public class AdminControllerFX {
     private TextArea lsArea;
     @FXML
     private Button disconnectButton;
+    @FXML
+    private Label foldersLabel;
+    @FXML
+    private Label filesLabel;
+    @FXML
+    private Label sizeLabel;
 
-    private DirectoryChooser fileChooser;
+    private DirectoryChooser dirChooser;
+    private FileChooser fileChooser;
 
     private AdminPanel adminPanel;
     private boolean isLog = false;
@@ -60,55 +67,77 @@ public class AdminControllerFX {
         FtpMaker.disconnect();
         activateTextInput(false);
         activateDisconnectButton(false);
+        clearInfoArea();
     }
 
+    private static File selectedFolder;
     private static File selectedFile;
 
     @FXML
     private void selectGameFolder(){
-        selectedFile = fileChooser.showDialog(AdminPanel.getWindow());
-        System.out.println("File choosed: "+selectedFile.toString());
-        System.out.println("Size: "+(selectedFile.getTotalSpace()-selectedFile.getFreeSpace()));
-        getFolderSize(selectedFile);
+        selectedFolder = dirChooser.showDialog(AdminPanel.getWindow());
+        selectedFile = null;
+        System.out.println();
+        System.out.println();
+        System.out.println("Folder choosed: "+selectedFolder.toString());
+        System.out.println("Size: "+(selectedFolder.getTotalSpace()-selectedFolder.getFreeSpace()));
+        getFolderSize(selectedFolder);
+        filesLabel.setText("Fichiers: "+fileAmount+"");
+        foldersLabel.setText("Dossiers: "+foldersAmount+"");
+        sizeLabel.setText("Taille totale: "+(float)size/1024/1024+"Mo");
     }
 
-    private int size = 0;
+    @FXML
+    private void selectFile(){
+        selectedFile = fileChooser.showOpenDialog(AdminPanel.getWindow());
+        selectedFolder = null;
+        System.out.println();
+        System.out.println();
+        System.out.println("File choosed: "+selectedFile.toString());
+        System.out.println("Size: "+selectedFile.length()/1024+"Ko");
+    }
+
+    private static long size = 0;
+    private static int fileAmount = 0;
+    private static int foldersAmount = 0;
     private File[] files;
     private File[] toDo;
 
-    private int getFolderSize(File folder){
+    private long getFolderSize(File folder){
         files = folder.listFiles();
-
-        while (files.length != 0){
-            ArrayList<File> filesTEMP = new ArrayList<>();
-            for (File current : files){
-                System.out.println("current file: "+current);
-                if (current.isFile())
-                    size+=current.length();
-                else{
-                    filesTEMP.add(current);
-                }
-            }
-            toDo = filesTEMP.toArray(new File[filesTEMP.size()]);
-            filesTEMP =
-            for (File temp : toDo){
-                files = temp.listFiles()
-            }
-
-            for (File temp : files){
-                System.out.println("[CONTENU] "+temp.toString());
-            }
-            System.out.println("size: "+size);
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+        FolderExplorer explorer = new FolderExplorer(files);
+        long startMillis = System.currentTimeMillis();
+        explorer.start();
+        try {
+            explorer.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
+        long endMillis = System.currentTimeMillis();
+        System.out.println("Temps: "+(double)(endMillis-startMillis)/1000+" sec");
+        System.out.println(size/1024+"Ko");
+        System.out.println(size/1024/1024+"Mo");
+        System.out.println(size/1024/1024/1024+"Go");
+        System.out.println();
+        System.out.println("Folders: "+foldersAmount);
+        System.out.println("Files: "+fileAmount);
+
         System.out.println("FINI !");
 
 
         return size;
+    }
+
+    public static void addSize(long amount){
+        size+=amount;
+    }
+
+    public static void addFile(){
+        fileAmount++;
+    }
+
+    public static void addFolder(){
+        foldersAmount++;
     }
 
     public void addText(String text, boolean userEnter){
@@ -130,8 +159,17 @@ public class AdminControllerFX {
     }
 
     @FXML
+    private void upload(){
+        if (selectedFile != null){
+            FtpMaker.uploadFile(selectedFile);
+        } else if (selectedFolder != null){
+
+        }
+    }
+
+    @FXML
     private void initialize() {
-        fileChooser = new DirectoryChooser();
+        dirChooser = new DirectoryChooser();
         activateDisconnectButton(false);
         System.out.println("tadaaa");
     }
