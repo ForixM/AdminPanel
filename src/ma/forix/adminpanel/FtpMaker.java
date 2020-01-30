@@ -19,16 +19,23 @@ public class FtpMaker {
         FtpMaker.password = password;
     }
 
-    public static void upload(File folder){
-        if (folder.isFile()){
-            try (InputStream input = new FileInputStream(folder)){
-                client.storeFile(client.printWorkingDirectory()+folder.getName(), input);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+    public static void uploadFolder(File folder){
+        File[] listFiles = folder.listFiles();
+        System.out.println("listfiles: "+listFiles);
+        for (File current : listFiles){
+            System.out.println("folder: "+current.getName());
         }
+        mkdir(folder.getName());
+        try {
+            client.changeWorkingDirectory(folder.getName());
+
+            FolderTransfert transfert = new FolderTransfert(listFiles);
+            transfert.start();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public static void uploadFile(File file){
@@ -45,8 +52,18 @@ public class FtpMaker {
         }
     }
 
-    public static void mkdir(String name){
-        //client.makeDirectory();
+    public static boolean mkdir(String name){
+        try {
+            System.out.println("j'ai réussis à makedirectory");
+            return client.makeDirectory(name);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static void cd(String directory) throws IOException {
+        client.changeWorkingDirectory(directory);
     }
 
     public static void setAdminControllerFX(AdminControllerFX adminC){
@@ -126,7 +143,7 @@ public class FtpMaker {
             adminControllerFX.addText("Dossier distant: ",false);
         } else if (commande[0].equals("cd") && commande[1].length() > 1){
             try {
-                client.changeWorkingDirectory(commande[1]);
+                cd(commande[1]);
                 adminControllerFX.addText("OK. Le dossier actuel est maintenant: "+client.printWorkingDirectory(), false);
                 ls();
             } catch (IOException e) {
@@ -136,15 +153,11 @@ public class FtpMaker {
         }
 
         if (commande[0].equals("mkdir") && commande[1].length() > 1){
-            try {
-                if (client.makeDirectory(commande[1])){
-                    adminControllerFX.addText("Dossier créé avec succès", false);
-                    ls();
-                } else {
-                    adminControllerFX.addText("Échec lors de la création du dossier", false);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
+            if (mkdir(commande[1])){
+                adminControllerFX.addText("Dossier créé avec succès", false);
+                ls();
+            } else {
+                adminControllerFX.addText("Échec lors de la création du dossier", false);
             }
         }
 

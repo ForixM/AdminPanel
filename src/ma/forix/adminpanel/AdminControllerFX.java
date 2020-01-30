@@ -95,6 +95,14 @@ public class AdminControllerFX {
         System.out.println();
         System.out.println("File choosed: "+selectedFile.toString());
         System.out.println("Size: "+selectedFile.length()/1024+"Ko");
+
+        filesLabel.setText("Fichiers: 1");
+        foldersLabel.setText("Dossiers: CEST UN FICHIER");
+        sizeLabel.setText("Taille totale: "+round((double)selectedFile.length()/1024/1024)+"Mo");
+    }
+
+    public double round(double val){
+        return (Math.floor(val*1000.0))/1000;
     }
 
     private static long size = 0;
@@ -163,7 +171,7 @@ public class AdminControllerFX {
         if (selectedFile != null){
             FtpMaker.uploadFile(selectedFile);
         } else if (selectedFolder != null){
-
+            FtpMaker.uploadFolder(selectedFolder);
         }
     }
 
