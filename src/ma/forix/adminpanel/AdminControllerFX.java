@@ -170,6 +170,7 @@ public class AdminControllerFX {
     @FXML
     private void initialize() {
         dirChooser = new DirectoryChooser();
+        fileChooser = new FileChooser();
         activateDisconnectButton(false);
         System.out.println("tadaaa");
     }

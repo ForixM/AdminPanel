@@ -103,7 +103,7 @@ public class FtpMaker {
             System.out.println("contenu contentlist: "+contentList);
             System.out.println("sa longueur: "+contentList.length);
             adminControllerFX.addText("Contenu du dossier: "+client.printWorkingDirectory(), false);
-            //adminControllerFX.clearInfoArea();
+            adminControllerFX.clearInfoArea();
 
             for (FTPFile selected : contentList) {
                 System.out.println("file: " + selected.getName());
