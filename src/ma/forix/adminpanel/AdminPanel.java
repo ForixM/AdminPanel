@@ -5,8 +5,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import ma.forix.adminpanel.controllers.AdminControllerFX;
+import ma.forix.adminpanel.utils.Saver;
 
 public class AdminPanel extends Application {
 
@@ -33,12 +35,12 @@ public class AdminPanel extends Application {
         root = loader.load();
 
         adminControllerFX = loader.getController();
-        adminControllerFX.setAdminPanel(this);
 
         scene = new Scene(root, 600-10, 400-10);
 
         window.setScene(scene);
         window.show();
+        new Saver();
     }
 
     public static Stage getWindow(){

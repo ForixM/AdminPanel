@@ -1,5 +1,6 @@
-Admin Panel.iml
-AdminPanel.patch
+AdminPanel.iml
+AdminPanel.ipr
+AdminPanel.iws
 /.idea
 /out
 /.idea/libraries
