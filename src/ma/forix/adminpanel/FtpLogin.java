@@ -4,6 +4,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import ma.forix.adminpanel.controllers.AdminControllerFX;
+import ma.forix.adminpanel.controllers.FtpLoginController;
 
 import java.io.IOException;
 
@@ -18,7 +20,7 @@ public class FtpLogin {
 
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(FtpLogin.class.getResource("FTPLogin.fxml"));
+            loader.setLocation(FtpLogin.class.getResource("fxml/FTPLogin.fxml"));
             Parent root = loader.load();
             loginController = loader.getController();
             loginController.setAdminPanel(adminControllerFX);

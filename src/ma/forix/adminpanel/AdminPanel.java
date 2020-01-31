@@ -5,8 +5,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import ma.forix.adminpanel.controllers.AdminControllerFX;
 
 public class AdminPanel extends Application {
 
@@ -29,7 +29,7 @@ public class AdminPanel extends Application {
         System.out.println("testinputfield: "+textInputField);
 
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(AdminPanel.class.getResource("AdminPanel.fxml"));
+        loader.setLocation(AdminPanel.class.getResource("fxml/AdminPanel.fxml"));
         root = loader.load();
 
         adminControllerFX = loader.getController();

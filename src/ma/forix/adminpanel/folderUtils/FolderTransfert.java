@@ -1,4 +1,6 @@
-package ma.forix.adminpanel;
+package ma.forix.adminpanel.folderUtils;
+
+import ma.forix.adminpanel.FtpMaker;
 
 import java.io.File;
 import java.io.IOException;

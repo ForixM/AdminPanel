@@ -1,5 +1,6 @@
-package ma.forix.adminpanel;
+package ma.forix.adminpanel.folderUtils;
 
+import ma.forix.adminpanel.FtpMaker;
 import org.apache.commons.net.ftp.FTPFile;
 
 import java.io.IOException;
@@ -21,7 +22,7 @@ public class FolderRemover extends Thread implements Runnable {
         for (FTPFile current : content){
             System.out.println("------------------------------------------------------------------------------------");
             try {
-                System.out.println("actuellement dans: "+FtpMaker.getClient().printWorkingDirectory());
+                System.out.println("actuellement dans: "+ FtpMaker.getClient().printWorkingDirectory());
             } catch (IOException e) {
                 e.printStackTrace();
             }

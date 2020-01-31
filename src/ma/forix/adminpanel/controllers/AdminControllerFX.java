@@ -1,4 +1,4 @@
-package ma.forix.adminpanel;
+package ma.forix.adminpanel.controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -7,6 +7,10 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
+import ma.forix.adminpanel.AdminPanel;
+import ma.forix.adminpanel.FtpLogin;
+import ma.forix.adminpanel.FtpMaker;
+import ma.forix.adminpanel.folderUtils.FolderExplorer;
 
 import java.io.File;
 

@@ -1,9 +1,11 @@
 package ma.forix.adminpanel;
 
+import ma.forix.adminpanel.controllers.AdminControllerFX;
+import ma.forix.adminpanel.folderUtils.FolderRemover;
+import ma.forix.adminpanel.folderUtils.FolderTransfert;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
-import sun.net.ftp.FtpClient;
 
 import java.io.*;
 

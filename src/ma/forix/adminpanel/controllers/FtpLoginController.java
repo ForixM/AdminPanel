@@ -1,8 +1,11 @@
-package ma.forix.adminpanel;
+package ma.forix.adminpanel.controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import ma.forix.adminpanel.FtpLogin;
+import ma.forix.adminpanel.FtpMaker;
+import ma.forix.adminpanel.controllers.AdminControllerFX;
 import org.apache.commons.net.ftp.FTPClient;
 
 public class FtpLoginController {
