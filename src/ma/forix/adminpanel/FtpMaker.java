@@ -3,6 +3,7 @@ package ma.forix.adminpanel;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
+import sun.net.ftp.FtpClient;
 
 import java.io.*;
 
@@ -64,6 +65,64 @@ public class FtpMaker {
 
     public static void cd(String directory) throws IOException {
         client.changeWorkingDirectory(directory);
+    }
+
+    public static void mdelete(String fileName){
+        try {
+            client.deleteFile(fileName);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void rmdir(String pathname){
+        try {
+            if (client.listFiles(pathname).length == 2){
+                if (client.removeDirectory(pathname)){
+                    ls();
+                    adminControllerFX.addText("Dossier supprimmé", false);
+                } else {
+                    adminControllerFX.addText("[ERREUR] La sélection doit obligatoirement être un dossier !", false);
+                }
+            } else if (client.listFiles(pathname).length > 2){
+                adminControllerFX.addText("il y a plusieurs dossiers à supprimer", false);
+                adminControllerFX.addText("longueur variable listfiles: "+client.listFiles(pathname).length, false);
+                cd(pathname);
+                System.out.println("je suis dans: "+client.printWorkingDirectory());
+                FolderRemover remover = new FolderRemover(client.listFiles());
+                remover.start();
+                remover.join();
+                cd("..");
+                client.removeDirectory(pathname);
+                ls();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static FTPClient getClient(){
+        return client;
+    }
+
+    public static FTPFile[] getListFiles(String pathname){
+        try {
+            return client.listFiles(pathname);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static FTPFile[] getListFiles(){
+        try {
+            return client.listFiles();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public static void setAdminControllerFX(AdminControllerFX adminC){
@@ -174,18 +233,8 @@ public class FtpMaker {
             }
         }
 
-        if (commande[0].equals("rmdir") && commande[1].length() > 1){
-            try {
-                if (client.removeDirectory(commande[1])){
-                    ls();
-                    adminControllerFX.addText("Dossier supprimmé", false);
-                } else {
-                    adminControllerFX.addText("[ERREUR] La sélection doit obligatoirement être un dossier !", false);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        if (commande[0].equals("rmdir") && commande[1].length() > 1)
+            rmdir(commande[1]);
     }
 
     public static void disconnect(){
