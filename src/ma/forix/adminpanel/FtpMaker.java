@@ -30,16 +30,14 @@ public class FtpMaker {
         for (File current : listFiles){
             System.out.println("folder: "+current.getName());
         }
-        mkdir(folder.getName());
         try {
-            client.changeWorkingDirectory(folder.getName());
 
             FolderTransfert transfert = new FolderTransfert(listFiles);
             transfert.start();
             transfert.join();
             System.out.println("Upload du dossier fini !");
 
-        } catch (IOException | InterruptedException e) {
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
@@ -57,8 +55,8 @@ public class FtpMaker {
 
     public static void uploadFile(File file){
         try (InputStream input = new FileInputStream(file)){
-            System.out.println("Envoi du fichier en cours...");
             client.storeFile(file.getName(), input);
+            FtpMaker.addFileUploaded();
             System.out.println("Envoi terminé");
             reponseServeur();
             ls();

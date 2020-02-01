@@ -20,7 +20,6 @@ public class FolderTransfert extends Thread implements Runnable{
         for (File current : content){
             if (current.isFile()) {
                 FtpMaker.uploadFile(current);
-                FtpMaker.addFileUploaded();
             } else {
                 FtpMaker.mkdir(current.getName());
                 try {
