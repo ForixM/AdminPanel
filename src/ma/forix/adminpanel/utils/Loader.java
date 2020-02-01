@@ -5,6 +5,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -63,5 +64,9 @@ public class Loader {
                 return null;
         } else
             return null;
+    }
+
+    public static File getGameContentFile(){
+        return new File(Saver.getFolderLocation()+"\\content.json");
     }
 }

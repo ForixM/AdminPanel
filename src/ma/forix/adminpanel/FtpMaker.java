@@ -1,5 +1,6 @@
 package ma.forix.adminpanel;
 
+import javafx.application.Platform;
 import ma.forix.adminpanel.controllers.AdminControllerFX;
 import ma.forix.adminpanel.folderUtils.FolderRemover;
 import ma.forix.adminpanel.folderUtils.FolderTransfert;
@@ -14,6 +15,7 @@ public class FtpMaker {
     private static String host, username, password;
     private static FTPClient client;
     private static AdminControllerFX adminControllerFX;
+    private static int fileUploaded = 0;
 
     public FtpMaker(String host, String username, String password){
         client = new FTPClient();
@@ -34,22 +36,32 @@ public class FtpMaker {
 
             FolderTransfert transfert = new FolderTransfert(listFiles);
             transfert.start();
+            transfert.join();
+            System.out.println("Upload du dossier fini !");
 
-        } catch (IOException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
+    }
 
+    public static void addFileUploaded(){
+        fileUploaded++;
+        final int fileUploadedT = fileUploaded;
+        final int fileAmount = AdminControllerFX.getFileAmount();
+        AdminControllerFX.getInstance().setAdvancement((double)fileUploadedT/(double)fileAmount);
+    }
+
+    public static int getFileUploaded(){
+        return fileUploaded;
     }
 
     public static void uploadFile(File file){
         try (InputStream input = new FileInputStream(file)){
             System.out.println("Envoi du fichier en cours...");
-            client.storeFile(client.printWorkingDirectory()+file.getName(), input);
+            client.storeFile(file.getName(), input);
             System.out.println("Envoi terminé");
             reponseServeur();
             ls();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -98,9 +110,7 @@ public class FtpMaker {
                 client.removeDirectory(pathname);
                 ls();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
     }

@@ -11,6 +11,7 @@ import ma.forix.adminpanel.utils.Saver;
 import org.apache.commons.net.ftp.FTPClient;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 public class FtpLoginController {
@@ -57,13 +58,9 @@ public class FtpLoginController {
             usernameField.setText(Loader.loadUsername());
 
         if (Loader.loadPassword() != null) {
-            try {
-                passwordField.setText(Base64.getDecoder().decode(Loader.loadPassword().getBytes("utf-8")).toString());
-                System.out.println(passwordField.getText());
-                System.out.println(Loader.loadPassword());
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
+            passwordField.setText(new String(Base64.getDecoder().decode(Loader.loadPassword()), StandardCharsets.UTF_8));
+            System.out.println(passwordField.getText());
+            System.out.println(Loader.loadPassword());
         }
     }
 

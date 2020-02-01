@@ -38,4 +38,17 @@ public class Saver {
     public static File getSaveLocation(){
         return new File(folderLocation+fileName);
     }
+
+    public static File getFolderLocation(){
+        return folderLocation;
+    }
+
+    public static void save(JSONArray gameContent){
+        try (FileWriter writer = new FileWriter(folderLocation+"\\content.json")){
+            writer.write(gameContent.toJSONString());
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
